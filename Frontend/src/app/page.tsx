@@ -115,6 +115,18 @@ export default function Home() {
 				<p>
 					© {new Date().getFullYear()} TripFuel. Todos los derechos reservados.
 				</p>
+				<div className="mt-2 flex justify-center gap-4">
+					<Link
+						href="/privacity"
+						className="hover:underline">
+						Política de Privacidad
+					</Link>
+					<Link
+						href="/terms-of-service"
+						className="hover:underline">
+						Condiciones de Servicio
+					</Link>
+				</div>
 			</footer>
 		</div>
 	);
