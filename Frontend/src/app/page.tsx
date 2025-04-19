@@ -113,8 +113,7 @@ export default function Home() {
 			{/* Footer */}
 			<footer className="py-8 text-center text-gray-600 text-sm">
 				<p>
-					© {new Date().getFullYear()} MotoAutonomía. Todos los derechos
-					reservados.
+					© {new Date().getFullYear()} TripFuel. Todos los derechos reservados.
 				</p>
 			</footer>
 		</div>
