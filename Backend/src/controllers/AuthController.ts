@@ -55,4 +55,12 @@ export class AuthController {
 			res.status(404).json({ message: err.message });
 		}
 	}
+
+	static async googleCallback(req: Request, res: Response) {
+		const user = req.user as any;
+		const token = new UserService().generateToken(user.id);
+		return res.redirect(
+			`${process.env.FRONTEND_URL}/auth/social?token=${token}`
+		);
+	}
 }

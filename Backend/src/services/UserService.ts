@@ -41,20 +41,39 @@ export class UserService {
 		};
 	}
 
-	async updateFuelPrices(userId: string, prices: { corriente?: number; extra?: number }) {
+	async findOrCreateByGoogle(googleId: string, email: string) {
+		let user = await this.repo.findByGoogleId(googleId);
+		if (user) return user;
+
+		user = await this.repo.findByEmail(email);
+		if (user) {
+			return this.repo.linkGoogleId(user.id, googleId);
+		}
+
+		return this.repo.create({ email, googleId, password: "" });
+	}
+
+	async updateFuelPrices(
+		userId: string,
+		prices: { corriente?: number; extra?: number }
+	) {
 		const updated = await this.repo.updateFuelPrices(userId, {
-		  corriente: prices.corriente ?? 0,
-		  extra:     prices.extra ?? 0,
+			corriente: prices.corriente ?? 0,
+			extra: prices.extra ?? 0,
 		});
-		if (!updated) throw new Error('Usuario no encontrado');
+		if (!updated) throw new Error("Usuario no encontrado");
 		return {
-		  id:         updated.id,
-		  email:      updated.email,
-		  fuelPrices: updated.fuelPrices,
+			id: updated.id,
+			email: updated.email,
+			fuelPrices: updated.fuelPrices,
 		};
-	  }
+	}
 
 	private signToken(userId: string) {
 		return jwt.sign({ userId }, config.JWT_SECRET, { expiresIn: "7d" });
+	}
+
+	public generateToken(userId: string) {
+		return this.signToken(userId);
 	}
 }

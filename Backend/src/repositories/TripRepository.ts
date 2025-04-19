@@ -20,6 +20,8 @@ export class TripRepository {
 		});
 	}
 
+	
+
 	async deleteById(userId: string, tripId: string): Promise<void> {
 		await Trip.deleteOne({
 			_id: new Types.ObjectId(tripId),

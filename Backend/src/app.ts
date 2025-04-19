@@ -1,5 +1,6 @@
 import express from "express";
 import { json } from "body-parser";
+import passport from './config/passport';
 import cors from "cors";
 import tripRoutes from "./routes/trip.routes";
 import authRoutes from "./routes/auth.routes";
@@ -9,6 +10,7 @@ export const createApp = () => {
 	const app = express();
 
 	app.use(cors());
+	app.use(passport.initialize());
 
 	app.use(json());
 

@@ -18,6 +18,7 @@ interface AuthContextType {
 	login: (email: string, password: string) => Promise<void>;
 	logout: () => void;
 	updatePrices: (corriente: number, extra: number) => Promise<void>;
+	socialLogin: (token: string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -75,9 +76,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 		router.push("/login");
 	};
 
+	const socialLogin = async (token: string) => {
+		localStorage.setItem("token", token);
+		const res = await api.get<AuthResponse>("/auth/me");
+		setUser(res.data.user);
+	};
+
 	return (
 		<AuthContext.Provider
-			value={{ user, loading, signup, login, logout, updatePrices }}>
+			value={{
+				user,
+				loading,
+				signup,
+				login,
+				logout,
+				updatePrices,
+				socialLogin,
+			}}>
 			{children}
 		</AuthContext.Provider>
 	);
