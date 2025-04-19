@@ -9,6 +9,7 @@ export const createApp = () => {
 	const app = express();
 
 	app.use(cors());
+	app.options('*', cors());
 
 	app.use(json());
 
