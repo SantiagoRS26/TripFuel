@@ -12,6 +12,14 @@ export const createApp = () => {
 
 	app.use(json());
 
+	app.get("/", (_req, res) => {
+		res.json({
+			status: "ok",
+			message: "🚀 Trip-Fuel API está en funcionamiento",
+			version: "1.0.0",
+		});
+	});
+
 	app.use("/api/auth", authRoutes);
 	app.use("/api/trips", tripRoutes);
 
