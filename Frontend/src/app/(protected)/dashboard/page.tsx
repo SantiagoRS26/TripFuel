@@ -22,7 +22,7 @@ export default function DashboardPage() {
 				transition={{ duration: 0.8 }}
 				className="text-center py-20 px-4">
 				<h1 className="text-4xl sm:text-5xl font-extrabold text-indigo-600 mb-4">
-					Calcula la autonomía de tu moto con facilidad
+					Calcula la autonomía de tu vehículo con facilidad
 				</h1>
 				<p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
 					Registra tus viajes, analiza tu consumo y optimiza tu rendimiento en
