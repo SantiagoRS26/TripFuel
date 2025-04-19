@@ -6,6 +6,7 @@ import {
 	gallonsToLiters,
 	kmPerGallon,
 	kmPerLiter,
+	slopeGalPerKm,
 } from "../utils/calculate";
 
 export class TripService {
@@ -22,6 +23,8 @@ export class TripService {
 		const kmsArr = trips.map((t) => t.kilometers);
 		const galArr = trips.map((t) => t.gallons);
 
+		const slope = slopeGalPerKm(kmsArr, galArr);
+
 		const avgKm = average(kmsArr);
 		const avgGal = average(galArr);
 		const avgKmPerGal = kmPerGallon(avgKm, avgGal);
@@ -34,6 +37,7 @@ export class TripService {
 				averageGallons: avgGal,
 				averageKmPerGallon: avgKmPerGal,
 				averageKmPerLiter: avgKmPerL,
+				slopeGalPerKm: slope,
 			},
 		};
 	}
@@ -43,13 +47,9 @@ export class TripService {
 		const user = await this.userRepo.findById(userId);
 		if (!user) throw new Error("Usuario no encontrado");
 
-		const galEstimated =
-			summary.averageKilometers > 0
-				? km * (summary.averageGallons / summary.averageKilometers)
-				: 0;
+		const galEstimated = km * summary.slopeGalPerKm;
 
 		const lEstimated = gallonsToLiters(galEstimated);
-
 		const costCorriente = galEstimated * user.fuelPrices.corriente;
 		const costExtra = galEstimated * user.fuelPrices.extra;
 

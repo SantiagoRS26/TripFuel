@@ -32,6 +32,7 @@ export class TripController {
 				return;
 			}
 			const result = await service.calculate(req.userId!, km);
+			console.log(result);
 			res.json(result);
 		} catch (err: any) {
 			res.status(400).json({ message: err.message });
