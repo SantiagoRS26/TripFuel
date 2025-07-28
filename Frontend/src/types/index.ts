@@ -28,10 +28,19 @@ export interface TripSummary {
 }
 
 export interface TripSummaryResponse {
-	averageKilometers: number;
-	averageGallons: number;
-	averageKmPerGallon: number;
-	averageKmPerLiter: number;
+        averageKilometers: number;
+        averageGallons: number;
+        averageKmPerGallon: number;
+        averageKmPerLiter: number;
+}
+
+export interface Vehicle {
+        _id: string;
+        userId: string;
+        name: string;
+        licensePlate: string;
+        createdAt: string;
+        updatedAt: string;
 }
 
 export interface CalculateResponse {

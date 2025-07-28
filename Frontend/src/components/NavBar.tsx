@@ -18,12 +18,13 @@ export default function NavBar() {
 	const hiddenPaths = ["/login", "/signup", "/unauthorized"];
 	if (hiddenPaths.includes(pathname)) return null;
 
-	const links = [
-		{ href: "/dashboard", label: "Dashboard" },
-		{ href: "/trips/new", label: "Nuevo Viaje" },
-		{ href: "/calculator", label: "Calculadora" },
-		{ href: "/settings", label: "Ajustes" },
-	];
+        const links = [
+                { href: "/dashboard", label: "Dashboard" },
+                { href: "/trips/new", label: "Nuevo Viaje" },
+                { href: "/vehicles", label: "Vehículos" },
+                { href: "/calculator", label: "Calculadora" },
+                { href: "/settings", label: "Ajustes" },
+        ];
 
 	const handleLogout = () => {
 		logout();
