@@ -60,16 +60,21 @@ export default function Home() {
 							desc: "Estimaciones de galones, litros y costos al instante.",
 							link: "/calculator",
 						},
-						{
-							title: "Registro de Viajes",
-							desc: "Añade nuevos viajes y lleva tu historial siempre actualizado.",
-							link: "/trips/new",
-						},
-						{
-							title: "Configuración de Precios",
-							desc: "Define tus precios de gasolina para cálculos precisos.",
-							link: "/settings",
-						},
+                                                {
+                                                        title: "Registro de Viajes",
+                                                        desc: "Añade nuevos viajes y lleva tu historial siempre actualizado.",
+                                                        link: "/trips/new",
+                                                },
+                                                {
+                                                        title: "Gestión de Vehículos",
+                                                        desc: "Administra varios vehículos y sus placas en tu cuenta.",
+                                                        link: "/vehicles",
+                                                },
+                                                {
+                                                        title: "Configuración de Precios",
+                                                        desc: "Define tus precios de gasolina para cálculos precisos.",
+                                                        link: "/settings",
+                                                },
 					].map((feature, idx) => (
 						<motion.div
 							key={feature.title}

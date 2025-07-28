@@ -22,8 +22,8 @@ passport.use(
 				const email = emails?.[0]?.value;
 				if (!email) throw new Error("Google profile sin email");
 
-				const user = await userSvc.findOrCreateByGoogle(googleId, email);
-				return done(null, user);
+                                const user = await userSvc.findOrCreateByGoogle(googleId, email);
+                                return done(null, user as any);
 			} catch (err) {
 				return done(err as Error);
 			}
