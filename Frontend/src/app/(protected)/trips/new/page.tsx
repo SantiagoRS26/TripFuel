@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { useVehicles } from "@/hooks/useVehicles";
 
 export default function NewTripPage() {
 	const router = useRouter();
@@ -17,7 +18,9 @@ export default function NewTripPage() {
 	/** ----------------------------------
 	 *  Shared state & helpers
 	 * ---------------------------------*/
-	const [selectedTab, setSelectedTab] = useState<string>("direct");
+        const { vehicles, loading: vehLoading } = useVehicles();
+        const [vehicleId, setVehicleId] = useState<string>("");
+        const [selectedTab, setSelectedTab] = useState<string>("direct");
 	const [gallons, setGallons] = useState<string>("");
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState<string | null>(null);
@@ -27,7 +30,18 @@ export default function NewTripPage() {
 
 	/** Tab 2 – odómetro antes / después  */
 	const [initialKm, setInitialKm] = useState<string>("");
-	const [finalKm, setFinalKm] = useState<string>("");
+        const [finalKm, setFinalKm] = useState<string>("");
+
+        React.useEffect(() => {
+                if (!vehicleId && vehicles.length > 0) {
+                        setVehicleId(vehicles[0]._id);
+                }
+        }, [vehicles, vehicleId]);
+
+        if (vehLoading)
+                return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+        if (!vehicleId)
+                return <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>;
 
 	const isValidNumber = (value: string) => /^[0-9]*[.,]?[0-9]*$/.test(value);
 	const toNumber = (value: string) => parseFloat(value.replace(",", "."));
@@ -60,9 +74,14 @@ export default function NewTripPage() {
 	/** -------------------------------
 	 *  Submit
 	 * ------------------------------*/
-	const handleSubmit = async (e: React.FormEvent) => {
-		e.preventDefault();
-		setError(null);
+        const handleSubmit = async (e: React.FormEvent) => {
+                e.preventDefault();
+                setError(null);
+
+                if (!vehicleId) {
+                        setError("Debes crear un vehículo antes");
+                        return;
+                }
 
 		let kmNumber: number | null = null;
 		const galNumber = toNumber(gallons);
@@ -101,10 +120,10 @@ export default function NewTripPage() {
 			return;
 		}
 
-		setLoading(true);
-		try {
-			await api.post("/trips", { kilometers: kmNumber, gallons: galNumber });
-			router.push("/dashboard");
+                setLoading(true);
+                try {
+                        await api.post("/trips", { vehicleId, kilometers: kmNumber, gallons: galNumber });
+                        router.push("/dashboard");
 		} catch (err: any) {
 			setError(err.response?.data?.message || "Error al guardar el viaje");
 		} finally {
@@ -143,11 +162,24 @@ export default function NewTripPage() {
 							Nuevo Viaje
 						</CardTitle>
 					</CardHeader>
-					<CardContent className="bg-white p-6">
-						<Tabs
-							defaultValue="direct"
-							value={selectedTab}
-							onValueChange={setSelectedTab}>
+                                        <CardContent className="bg-white p-6">
+                                                <div className="mb-4">
+                                                        <Label className="text-gray-600">Vehículo</Label>
+                                                        <select
+                                                                value={vehicleId}
+                                                                onChange={(e) => setVehicleId(e.target.value)}
+                                                                className="mt-1 w-full border rounded p-2">
+                                                                {vehicles.map((v) => (
+                                                                        <option key={v._id} value={v._id}>
+                                                                                {v.name}
+                                                                        </option>
+                                                                ))}
+                                                        </select>
+                                                </div>
+                                                <Tabs
+                                                        defaultValue="direct"
+                                                        value={selectedTab}
+                                                        onValueChange={setSelectedTab}>
 							<TabsList className="grid grid-cols-2 mb-6 bg-indigo-50 p-1 rounded-full">
 								<TabsTrigger
 									value="direct"

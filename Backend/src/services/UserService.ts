@@ -2,31 +2,35 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { config } from "../config";
 import { UserRepository } from "../repositories/UserRepository";
+import { VehicleService } from "./VehicleService";
 
 const SALT_ROUNDS = 10;
 
 export class UserService {
-	private repo = new UserRepository();
+        private repo = new UserRepository();
+        private vehicleSvc = new VehicleService();
 
 	async register(email: string, plainPassword: string) {
 		const existing = await this.repo.findByEmail(email);
 		if (existing) throw new Error("Email already in use");
 
 		const hash = await bcrypt.hash(plainPassword, SALT_ROUNDS);
-		const user = await this.repo.create({ email, password: hash });
-		const token = this.signToken(user.id);
-		return { user, token };
+                const user = await this.repo.create({ email, password: hash });
+                await this.vehicleSvc.ensureDefaultVehicle(user.id);
+                const token = this.signToken(user.id);
+                return { user, token };
 	}
 
-	async login(email: string, plainPassword: string) {
-		const user = await this.repo.findByEmail(email);
-		if (!user) throw new Error("Invalid credentials");
+        async login(email: string, plainPassword: string) {
+                const user = await this.repo.findByEmail(email);
+                if (!user) throw new Error("Invalid credentials");
 
 		const valid = await bcrypt.compare(plainPassword, user.password);
 		if (!valid) throw new Error("Invalid credentials");
 
-		const token = this.signToken(user.id);
-		return { user, token };
+                await this.vehicleSvc.ensureDefaultVehicle(user.id);
+                const token = this.signToken(user.id);
+                return { user, token };
 	}
 
 	async me(userId: string) {
@@ -42,16 +46,23 @@ export class UserService {
 	}
 
 	async findOrCreateByGoogle(googleId: string, email: string) {
-		let user = await this.repo.findByGoogleId(googleId);
-		if (user) return user;
+                let user = await this.repo.findByGoogleId(googleId);
+                if (user) {
+                        await this.vehicleSvc.ensureDefaultVehicle(user.id);
+                        return user;
+                }
 
 		user = await this.repo.findByEmail(email);
 		if (user) {
-			return this.repo.linkGoogleId(user.id, googleId);
-		}
+                        const linked = await this.repo.linkGoogleId(user.id, googleId);
+                        await this.vehicleSvc.ensureDefaultVehicle(linked!.id);
+                        return linked;
+                }
 
-		return this.repo.create({ email, googleId, password: "" });
-	}
+                const created = await this.repo.create({ email, googleId, password: "" });
+                await this.vehicleSvc.ensureDefaultVehicle(created.id);
+                return created;
+        }
 
 	async updateFuelPrices(
 		userId: string,

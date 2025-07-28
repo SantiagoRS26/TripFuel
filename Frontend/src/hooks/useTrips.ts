@@ -9,28 +9,28 @@ interface TripsData {
 	summary: TripSummaryResponse;
 }
 
-export function useTrips() {
+export function useTrips(vehicleId: string) {
 	const [data, setData] = useState<TripsData | null>(null);
 	const [loading, setLoading] = useState<boolean>(true);
 	const [error, setError] = useState<string | null>(null);
 
-	const fetchData = useCallback(() => {
-		setLoading(true);
-		api
-			.get<TripsData>("/trips")
+        const fetchData = useCallback(() => {
+                setLoading(true);
+                api
+                        .get<TripsData>(`/trips?vehicleId=${vehicleId}`)
 			.then((res) => setData(res.data))
 			.catch((err) => setError(err.message || "Error al cargar viajes"))
 			.finally(() => setLoading(false));
-	}, []);
+        }, [vehicleId]);
 
 	useEffect(() => {
 		fetchData();
-	}, [fetchData]);
+        }, [fetchData]);
 
 	const deleteTrip = async (id: string) => {
-		await api.delete(`/trips/${id}`);
-		fetchData();
-	};
+                await api.delete(`/trips/${id}`);
+                fetchData();
+        };
 
 	return { data, loading, error, deleteTrip };
 }
