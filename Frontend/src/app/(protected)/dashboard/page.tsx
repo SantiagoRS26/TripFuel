@@ -1,17 +1,32 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useTrips } from "@/hooks/useTrips";
+import { useVehicles } from "@/hooks/useVehicles";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function DashboardPage() {
-	const { data, loading, error, deleteTrip } = useTrips();
+        const { vehicles, loading: vehLoading } = useVehicles();
+        const [vehicleId, setVehicleId] = useState<string>("");
+        const { data, loading, error, deleteTrip } = useTrips(vehicleId);
 
-	if (loading)
-		return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
-	if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
+        React.useEffect(() => {
+                if (!vehicleId && vehicles.length > 0) {
+                        setVehicleId(vehicles[0]._id);
+                }
+        }, [vehicles, vehicleId]);
+
+        if (vehLoading || loading)
+                return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+        if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
+        if (!vehicleId)
+                return (
+                        <p className="p-4 text-center text-gray-500">
+                                Debes crear un vehículo antes de continuar.
+                        </p>
+                );
 
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-sky-50">
@@ -28,12 +43,25 @@ export default function DashboardPage() {
 					Registra tus viajes, analiza tu consumo y optimiza tu rendimiento en
 					carretera.
 				</p>
-				<Link
-					href="/trips/new"
-					className="inline-block bg-indigo-600 text-white px-8 py-4 rounded-full shadow-lg hover:bg-indigo-700 transition">
-					+ Nuevo Viaje
-				</Link>
-			</motion.section>
+                                <div className="flex flex-col items-center gap-4">
+                                        <select
+                                                value={vehicleId}
+                                                onChange={(e) => setVehicleId(e.target.value)}
+                                                className="border rounded p-2">
+                                                {vehicles.map((v) => (
+                                                        <option key={v._id} value={v._id}>
+                                                                {v.name}
+                                                        </option>
+                                                ))}
+                                        </select>
+
+                                        <Link
+                                                href="/trips/new"
+                                                className="inline-block bg-indigo-600 text-white px-8 py-4 rounded-full shadow-lg hover:bg-indigo-700 transition">
+                                                + Nuevo Viaje
+                                        </Link>
+                                </div>
+                        </motion.section>
 
 			{/* Stats */}
 			<motion.section

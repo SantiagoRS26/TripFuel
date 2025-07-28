@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useCalculate } from "@/hooks/useCalculate";
+import { useVehicles } from "@/hooks/useVehicles";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -17,6 +18,8 @@ const formatCOP = (value: number) => {
 };
 
 export default function CalculatorPage() {
+  const { vehicles, loading: vehLoading } = useVehicles();
+  const [vehicleId, setVehicleId] = useState<string>("");
   const { user } = useAuth();
   const corrientePrice = user?.fuelPrices.corriente ?? 0;
   const extraPrice = user?.fuelPrices.extra ?? 0;
@@ -45,8 +48,21 @@ export default function CalculatorPage() {
     );
   }
 
+  if (vehLoading)
+    return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+  if (!vehicleId)
+    return (
+      <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>
+    );
+
   const [km, setKm] = useState<string>("");
-  const { data, loading, error, calculate } = useCalculate();
+  const { data, loading, error, calculate } = useCalculate(vehicleId);
+
+  React.useEffect(() => {
+    if (!vehicleId && vehicles.length > 0) {
+      setVehicleId(vehicles[0]._id);
+    }
+  }, [vehicles, vehicleId]);
 
   const handleKmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -95,6 +111,20 @@ export default function CalculatorPage() {
           </CardHeader>
           <CardContent className="space-y-6 bg-white p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <Label className="text-gray-600">Vehículo</Label>
+                <select
+                  value={vehicleId}
+                  onChange={(e) => setVehicleId(e.target.value)}
+                  className="mt-1 w-full border rounded p-2"
+                >
+                  {vehicles.map((v) => (
+                    <option key={v._id} value={v._id}>
+                      {v.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div>
                 <Label htmlFor="km" className="text-gray-600">
                   Kilómetros

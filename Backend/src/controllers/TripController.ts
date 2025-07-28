@@ -5,38 +5,52 @@ import { AuthRequest } from "../middleware/auth";
 const service = new TripService();
 
 export class TripController {
-	static async create(req: AuthRequest, res: Response): Promise<void> {
-		try {
-			const { kilometers, gallons } = req.body;
-			const trip = await service.create(req.userId!, kilometers, gallons);
-			res.status(201).json(trip);
-		} catch (err: any) {
-			res.status(400).json({ message: err.message });
-		}
-	}
+        static async create(req: AuthRequest, res: Response): Promise<void> {
+                try {
+                        const { kilometers, gallons, vehicleId } = req.body;
+                        if (!vehicleId) {
+                                res.status(400).json({ message: "vehicleId requerido" });
+                                return;
+                        }
+                        const trip = await service.create(req.userId!, vehicleId, kilometers, gallons);
+                        res.status(201).json(trip);
+                } catch (err: any) {
+                        res.status(400).json({ message: err.message });
+                }
+        }
 
-	static async list(req: AuthRequest, res: Response): Promise<void> {
-		try {
-			const data = await service.listWithSummary(req.userId!);
-			res.json(data);
-		} catch (err: any) {
-			res.status(400).json({ message: err.message });
-		}
-	}
+        static async list(req: AuthRequest, res: Response): Promise<void> {
+                try {
+                        const { vehicleId } = req.query as { vehicleId: string };
+                        if (!vehicleId) {
+                                res.status(400).json({ message: "vehicleId requerido" });
+                                return;
+                        }
+                        const data = await service.listWithSummary(req.userId!, vehicleId);
+                        res.json(data);
+                } catch (err: any) {
+                        res.status(400).json({ message: err.message });
+                }
+        }
 
-	static async calculate(req: AuthRequest, res: Response): Promise<void> {
-		try {
-			const km = parseFloat(req.query.km as string);
-			if (isNaN(km) || km <= 0) {
-				res.status(400).json({ message: "Parámetro km inválido" });
-				return;
-			}
-			const result = await service.calculate(req.userId!, km);
-			console.log(result);
-			res.json(result);
-		} catch (err: any) {
-			res.status(400).json({ message: err.message });
-		}
+        static async calculate(req: AuthRequest, res: Response): Promise<void> {
+                try {
+                        const { vehicleId } = req.query as { vehicleId: string };
+                        if (!vehicleId) {
+                                res.status(400).json({ message: "vehicleId requerido" });
+                                return;
+                        }
+                        const km = parseFloat(req.query.km as string);
+                        if (isNaN(km) || km <= 0) {
+                                res.status(400).json({ message: "Parámetro km inválido" });
+                                return;
+                        }
+                        const result = await service.calculate(req.userId!, vehicleId, km);
+                        console.log(result);
+                        res.json(result);
+                } catch (err: any) {
+                        res.status(400).json({ message: err.message });
+                }
 	}
 
 	static async delete(req: AuthRequest, res: Response): Promise<void> {
