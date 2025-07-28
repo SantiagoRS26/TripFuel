@@ -50,7 +50,7 @@ export default function CalculatorPage() {
 
   if (vehLoading)
     return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
-  if (!vehicleId)
+  if (!vehicleId && vehicles.length === 0)
     return (
       <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>
     );

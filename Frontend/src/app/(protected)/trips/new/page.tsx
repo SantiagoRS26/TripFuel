@@ -40,7 +40,7 @@ export default function NewTripPage() {
 
         if (vehLoading)
                 return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
-        if (!vehicleId)
+        if (!vehicleId && vehicles.length === 0)
                 return <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>;
 
 	const isValidNumber = (value: string) => /^[0-9]*[.,]?[0-9]*$/.test(value);

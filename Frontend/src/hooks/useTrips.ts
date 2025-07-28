@@ -10,17 +10,22 @@ interface TripsData {
 }
 
 export function useTrips(vehicleId: string) {
-	const [data, setData] = useState<TripsData | null>(null);
-	const [loading, setLoading] = useState<boolean>(true);
-	const [error, setError] = useState<string | null>(null);
+        const [data, setData] = useState<TripsData | null>(null);
+        const [loading, setLoading] = useState<boolean>(true);
+        const [error, setError] = useState<string | null>(null);
 
         const fetchData = useCallback(() => {
+                if (!vehicleId) {
+                        setData(null);
+                        setLoading(false);
+                        return;
+                }
                 setLoading(true);
                 api
                         .get<TripsData>(`/trips?vehicleId=${vehicleId}`)
-			.then((res) => setData(res.data))
-			.catch((err) => setError(err.message || "Error al cargar viajes"))
-			.finally(() => setLoading(false));
+                        .then((res) => setData(res.data))
+                        .catch((err) => setError(err.message || "Error al cargar viajes"))
+                        .finally(() => setLoading(false));
         }, [vehicleId]);
 
 	useEffect(() => {

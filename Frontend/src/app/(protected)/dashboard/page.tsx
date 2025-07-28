@@ -21,7 +21,7 @@ export default function DashboardPage() {
         if (vehLoading || loading)
                 return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
         if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
-        if (!vehicleId)
+        if (!vehicleId && vehicles.length === 0)
                 return (
                         <p className="p-4 text-center text-gray-500">
                                 Debes crear un vehículo antes de continuar.

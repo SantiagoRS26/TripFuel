@@ -21,8 +21,8 @@ export class TripService {
         }
 
         async listWithSummary(userId: string, vehicleId: string) {
-                await this.vehicleSvc.ensureDefaultVehicle(userId);
-                await this.tripRepo.assignVehicleToOldTrips(userId, vehicleId);
+                const defaultVeh = await this.vehicleSvc.ensureDefaultVehicle(userId);
+                await this.tripRepo.assignVehicleToOldTrips(userId, defaultVeh.id);
                 const trips = await this.tripRepo.findByVehicle(userId, vehicleId);
 
 		const kmsArr = trips.map((t) => t.kilometers);
