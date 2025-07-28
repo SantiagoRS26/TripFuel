@@ -4,6 +4,18 @@ import { IVehicle } from "../models/Vehicle";
 export class VehicleService {
     private repo = new VehicleRepository();
 
+    async ensureDefaultVehicle(userId: string): Promise<IVehicle> {
+        let vehicle = await this.repo.findDefault(userId);
+        if (!vehicle) {
+            vehicle = await this.repo.createDefault(userId);
+        }
+        return vehicle;
+    }
+
+    async getDefaultVehicle(userId: string): Promise<IVehicle> {
+        return this.ensureDefaultVehicle(userId);
+    }
+
     async create(userId: string, name: string, licensePlate: string): Promise<IVehicle> {
         return this.repo.create({ userId, name, licensePlate });
     }

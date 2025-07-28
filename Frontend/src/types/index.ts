@@ -13,11 +13,12 @@ export interface AuthResponse {
 }
 
 export interface ITrip {
-	_id: string;
-	userId: string;
-	kilometers: number;
-	gallons: number;
-	createdAt: string;
+        _id: string;
+        userId: string;
+        vehicleId: string;
+        kilometers: number;
+        gallons: number;
+        createdAt: string;
 }
 
 export interface TripSummary {

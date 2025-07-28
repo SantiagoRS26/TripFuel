@@ -10,8 +10,21 @@ export class VehicleRepository {
         });
     }
 
+    async createDefault(userId: string): Promise<IVehicle> {
+        return Vehicle.create({
+            userId: new Types.ObjectId(userId),
+            name: "Vehiculo por defecto",
+            licensePlate: "DEFAULT",
+            isDefault: true,
+        });
+    }
+
     async findByUser(userId: string): Promise<IVehicle[]> {
         return Vehicle.find({ userId: new Types.ObjectId(userId) }).sort({ createdAt: -1 });
+    }
+
+    async findDefault(userId: string): Promise<IVehicle | null> {
+        return Vehicle.findOne({ userId: new Types.ObjectId(userId), isDefault: true });
     }
 
     async findById(userId: string, id: string): Promise<IVehicle | null> {

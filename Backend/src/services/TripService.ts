@@ -1,5 +1,6 @@
 import { TripRepository } from "../repositories/TripRepository";
 import { UserRepository } from "../repositories/UserRepository";
+import { VehicleService } from "./VehicleService";
 import { ITrip } from "../models/Trip";
 import {
 	average,
@@ -10,15 +11,19 @@ import {
 } from "../utils/calculate";
 
 export class TripService {
-	private tripRepo = new TripRepository();
-	private userRepo = new UserRepository();
+        private tripRepo = new TripRepository();
+        private userRepo = new UserRepository();
+        private vehicleSvc = new VehicleService();
 
-	async create(userId: string, km: number, gal: number): Promise<ITrip> {
-		return this.tripRepo.create({ userId, kilometers: km, gallons: gal });
-	}
+        async create(userId: string, vehicleId: string, km: number, gal: number): Promise<ITrip> {
+                await this.vehicleSvc.ensureDefaultVehicle(userId);
+                return this.tripRepo.create({ userId, vehicleId, kilometers: km, gallons: gal });
+        }
 
-	async listWithSummary(userId: string) {
-		const trips = await this.tripRepo.findByUser(userId);
+        async listWithSummary(userId: string, vehicleId: string) {
+                const defaultVeh = await this.vehicleSvc.ensureDefaultVehicle(userId);
+                await this.tripRepo.assignVehicleToOldTrips(userId, defaultVeh.id);
+                const trips = await this.tripRepo.findByVehicle(userId, vehicleId);
 
 		const kmsArr = trips.map((t) => t.kilometers);
 		const galArr = trips.map((t) => t.gallons);
@@ -42,8 +47,8 @@ export class TripService {
 		};
 	}
 
-	async calculate(userId: string, km: number) {
-		const { summary } = await this.listWithSummary(userId);
+        async calculate(userId: string, vehicleId: string, km: number) {
+                const { summary } = await this.listWithSummary(userId, vehicleId);
 		const user = await this.userRepo.findById(userId);
 		if (!user) throw new Error("Usuario no encontrado");
 
