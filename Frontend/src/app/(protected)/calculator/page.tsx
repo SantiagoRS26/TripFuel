@@ -20,10 +20,34 @@ const formatCOP = (value: number) => {
 export default function CalculatorPage() {
   const { vehicles, loading: vehLoading } = useVehicles();
   const [vehicleId, setVehicleId] = useState<string>("");
+  const [km, setKm] = useState<string>("");
+  const { data, loading, error, calculate } = useCalculate(vehicleId);
   const { user } = useAuth();
+
   const corrientePrice = user?.fuelPrices.corriente ?? 0;
   const extraPrice = user?.fuelPrices.extra ?? 0;
   const noPrices = corrientePrice <= 0 && extraPrice <= 0;
+
+  React.useEffect(() => {
+    if (!vehicleId && vehicles.length > 0) {
+      setVehicleId(vehicles[0]._id);
+    }
+  }, [vehicles, vehicleId]);
+
+  const handleKmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (/^[0-9]*[.,]?[0-9]*$/.test(value) || value === "") {
+      setKm(value);
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!km) return;
+    const kmNumber = parseFloat(km.replace(",", "."));
+    if (isNaN(kmNumber) || kmNumber <= 0) return;
+    calculate(kmNumber);
+  };
 
   if (noPrices) {
     return (
@@ -54,30 +78,6 @@ export default function CalculatorPage() {
     return (
       <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>
     );
-
-  const [km, setKm] = useState<string>("");
-  const { data, loading, error, calculate } = useCalculate(vehicleId);
-
-  React.useEffect(() => {
-    if (!vehicleId && vehicles.length > 0) {
-      setVehicleId(vehicles[0]._id);
-    }
-  }, [vehicles, vehicleId]);
-
-  const handleKmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (/^[0-9]*[.,]?[0-9]*$/.test(value) || value === "") {
-      setKm(value);
-    }
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!km) return;
-    const kmNumber = parseFloat(km.replace(",", "."));
-    if (isNaN(kmNumber) || kmNumber <= 0) return;
-    calculate(kmNumber);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-sky-50 pt-24 pb-12 px-4">
