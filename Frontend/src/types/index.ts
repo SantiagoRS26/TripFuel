@@ -1,10 +1,11 @@
 export interface User {
-	id: string;
-	email: string;
-	fuelPrices: {
-		corriente: number;
-		extra: number;
-	};
+        id: string;
+        email: string;
+        role: "user" | "admin";
+        fuelPrices: {
+                corriente: number;
+                extra: number;
+        };
 }
 
 export interface AuthResponse {
