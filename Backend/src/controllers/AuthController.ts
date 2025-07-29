@@ -8,11 +8,16 @@ export class AuthController {
 	static async signup(req: Request, res: Response) {
 		try {
 			const { email, password } = req.body;
-			const { user, token } = await service.register(email, password);
-			res.status(201).json({
-				user: { id: user.id, email: user.email, fuelPrices: user.fuelPrices },
-				token,
-			});
+                const { user, token } = await service.register(email, password);
+                res.status(201).json({
+                                user: {
+                                        id: user.id,
+                                        email: user.email,
+                                        fuelPrices: user.fuelPrices,
+                                        role: user.role,
+                                },
+                                token,
+                        });
 		} catch (err: any) {
 			res.status(400).json({ message: err.message });
 		}
@@ -21,11 +26,16 @@ export class AuthController {
 	static async login(req: Request, res: Response) {
 		try {
 			const { email, password } = req.body;
-			const { user, token } = await service.login(email, password);
-			res.json({
-				user: { id: user.id, email: user.email, fuelPrices: user.fuelPrices },
-				token,
-			});
+                const { user, token } = await service.login(email, password);
+                res.json({
+                                user: {
+                                        id: user.id,
+                                        email: user.email,
+                                        fuelPrices: user.fuelPrices,
+                                        role: user.role,
+                                },
+                                token,
+                        });
 		} catch (err: any) {
 			res.status(400).json({ message: err.message });
 		}
@@ -56,11 +66,11 @@ export class AuthController {
 		}
 	}
 
-	static async googleCallback(req: Request, res: Response) {
-		const user = req.user as any;
-		const token = new UserService().generateToken(user.id);
-		return res.redirect(
-			`${process.env.FRONTEND_URL}/auth/social?token=${token}`
-		);
-	}
+        static async googleCallback(req: Request, res: Response) {
+                const user = req.user as any;
+                const token = new UserService().generateToken(user.id, user.role);
+                return res.redirect(
+                        `${process.env.FRONTEND_URL}/auth/social?token=${token}`
+                );
+        }
 }
