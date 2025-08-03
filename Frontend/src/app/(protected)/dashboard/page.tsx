@@ -6,11 +6,16 @@ import { useVehicles } from "@/hooks/useVehicles";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { formatCOP } from "@/lib/format";
 
 export default function DashboardPage() {
         const { vehicles, loading: vehLoading } = useVehicles();
         const [vehicleId, setVehicleId] = useState<string>("");
         const { trips, summary, loading, error, deleteTrip } = useTrips(vehicleId);
+        const { fuelPrices } = useAuth();
+        const corrientePrice = fuelPrices?.corriente ?? 0;
+        const extraPrice = fuelPrices?.extra ?? 0;
 
         React.useEffect(() => {
                 if (!vehicleId && vehicles.length > 0) {
@@ -120,10 +125,13 @@ export default function DashboardPage() {
 								<th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
 									Km/Gal
 								</th>
-								<th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
-									Km/Litro
-								</th>
-								<th className="px-6 py-3"></th>
+                                                               <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                                                                        Km/Litro
+                                                               </th>
+                                                               <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                                                                        Precio/Km
+                                                               </th>
+                                                               <th className="px-6 py-3"></th>
 							</tr>
 						</thead>
 						<tbody className="bg-white divide-y divide-gray-200">
@@ -144,21 +152,39 @@ export default function DashboardPage() {
 									<td className="px-6 py-4 whitespace-nowrap">
 										{(trip.kilometers / trip.gallons).toFixed(2)}
 									</td>
-									<td className="px-6 py-4 whitespace-nowrap">
-										{(trip.kilometers / trip.gallons / 3.78541).toFixed(2)}
-									</td>
-									<td className="px-6 py-4 whitespace-nowrap text-right">
-										<button
-											onClick={() => deleteTrip(trip._id)}
-											className="text-red-500 hover:text-red-700">
-											<Trash2 size={20} />
-										</button>
-									</td>
-								</motion.tr>
-							))}
-						</tbody>
-					</table>
-				</div>
+                                                                       <td className="px-6 py-4 whitespace-nowrap">
+                                                                               {(trip.kilometers / trip.gallons / 3.78541).toFixed(2)}
+                                                                       </td>
+                                                                       <td className="px-6 py-4 whitespace-nowrap">
+                                                                               {corrientePrice > 0 || extraPrice > 0 ? (
+                                                                                       <div className="flex flex-col">
+                                                                                               {corrientePrice > 0 && (
+                                                                                                       <span>
+                                                                                                               C: {formatCOP((trip.gallons * corrientePrice) / trip.kilometers)}
+                                                                                                       </span>
+                                                                                               )}
+                                                                                               {extraPrice > 0 && (
+                                                                                                       <span>
+                                                                                                               E: {formatCOP((trip.gallons * extraPrice) / trip.kilometers)}
+                                                                                                       </span>
+                                                                                               )}
+                                                                                       </div>
+                                                                               ) : (
+                                                                                       <span>N/A</span>
+                                                                               )}
+                                                                       </td>
+                                                                       <td className="px-6 py-4 whitespace-nowrap text-right">
+                                                                               <button
+                                                                                       onClick={() => deleteTrip(trip._id)}
+                                                                                       className="text-red-500 hover:text-red-700">
+                                                                                       <Trash2 size={20} />
+                                                                               </button>
+                                                                       </td>
+                                                               </motion.tr>
+                                                       ))}
+                                               </tbody>
+                                       </table>
+                               </div>
 			</motion.section>
 
 			{/* Footer CTA */}
