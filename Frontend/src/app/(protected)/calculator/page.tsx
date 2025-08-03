@@ -10,12 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-
-// Helper para formatear a COP con separador de miles y sin decimales
-const formatCOP = (value: number) => {
-  const rounded = Math.round(value);
-  return `$${rounded.toLocaleString("es-CO")}`;
-};
+import { formatCOP } from "@/lib/format";
 
 export default function CalculatorPage() {
   const { vehicles, loading: vehLoading } = useVehicles();
@@ -181,6 +176,16 @@ export default function CalculatorPage() {
                 <div className="bg-indigo-50 rounded-xl shadow p-4 text-center">
                   <p className="text-gray-500">Precio Extra</p>
                   <p className="text-2xl font-bold text-green-600">{formatCOP(data.cost.extra)}</p>
+                </div>
+                {/* Precio/Km Corriente */}
+                <div className="bg-indigo-50 rounded-xl shadow p-4 text-center">
+                  <p className="text-gray-500">Precio/Km Corriente</p>
+                  <p className="text-2xl font-bold text-green-600">{formatCOP(data.cost.corriente / data.kilometers)}</p>
+                </div>
+                {/* Precio/Km Extra */}
+                <div className="bg-indigo-50 rounded-xl shadow p-4 text-center">
+                  <p className="text-gray-500">Precio/Km Extra</p>
+                  <p className="text-2xl font-bold text-green-600">{formatCOP(data.cost.extra / data.kilometers)}</p>
                 </div>
               </motion.div>
             )}
