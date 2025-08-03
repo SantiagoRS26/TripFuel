@@ -7,12 +7,8 @@ export interface IUser extends Document {
         password: string;
         googleId: string;
         role: UserRole;
-        fuelPrices: {
-                corriente: number;
-                extra: number;
-        };
         createdAt: Date;
-	updatedAt: Date;
+        updatedAt: Date;
 }
 
 const userSchema = new Schema<IUser>(
@@ -24,10 +20,6 @@ const userSchema = new Schema<IUser>(
                         type: String,
                         enum: ["user", "admin"],
                         default: "user",
-                },
-                fuelPrices: {
-                        corriente: { type: Number, default: 0 },
-                        extra: { type: Number, default: 0 },
                 },
         },
         { timestamps: true }

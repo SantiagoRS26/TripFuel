@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
@@ -10,16 +10,24 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function SettingsPage() {
-  const { user, updatePrices } = useAuth();
+  const { user, fuelPrices, updateFuelPrices } = useAuth();
+  const isAdmin = user?.role === "admin";
   // Estados de texto para mostrar con separadores de miles
-  const [corrienteStr, setCorrienteStr] = useState<string>(
-    user?.fuelPrices.corriente
-      ? user.fuelPrices.corriente.toLocaleString("es-CO")
-      : ""
-  );
-  const [extraStr, setExtraStr] = useState<string>(
-    user?.fuelPrices.extra ? user.fuelPrices.extra.toLocaleString("es-CO") : ""
-  );
+  const [corrienteStr, setCorrienteStr] = useState<string>("");
+  const [extraStr, setExtraStr] = useState<string>("");
+
+  useEffect(() => {
+    if (fuelPrices) {
+      setCorrienteStr(
+        fuelPrices.corriente
+          ? fuelPrices.corriente.toLocaleString("es-CO")
+          : ""
+      );
+      setExtraStr(
+        fuelPrices.extra ? fuelPrices.extra.toLocaleString("es-CO") : ""
+      );
+    }
+  }, [fuelPrices]);
 
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
@@ -56,7 +64,7 @@ export default function SettingsPage() {
     setLoading(true);
     setMessage(null);
     try {
-      await updatePrices(corrienteNum, extraNum);
+      await updateFuelPrices(corrienteNum, extraNum);
       setMessage("Precios actualizados correctamente");
     } catch (err: any) {
       setMessage(err.message);
@@ -114,6 +122,7 @@ export default function SettingsPage() {
                     placeholder="0"
                     required
                     className="pl-7"
+                    disabled={!isAdmin}
                   />
                 </div>
               </div>
@@ -134,17 +143,20 @@ export default function SettingsPage() {
                     onChange={handleExtraChange}
                     placeholder="0"
                     className="pl-7"
+                    disabled={!isAdmin}
                   />
                 </div>
               </div>
 
-              <Button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition"
-              >
-                {loading ? "Guardando..." : "Guardar"}
-              </Button>
+              {isAdmin && (
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition"
+                >
+                  {loading ? "Guardando..." : "Guardar"}
+                </Button>
+              )}
 
               {message && (
                 <motion.p

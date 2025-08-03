@@ -2,10 +2,15 @@ export interface User {
         id: string;
         email: string;
         role: "user" | "admin";
-        fuelPrices: {
-                corriente: number;
-                extra: number;
-        };
+}
+
+export interface FuelPrices {
+        corriente: number;
+        extra: number;
+}
+
+export interface FuelPricesResponse {
+        prices: FuelPrices;
 }
 
 export interface AuthResponse {

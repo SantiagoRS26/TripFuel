@@ -18,22 +18,11 @@ export class UserRepository {
 		return User.findOne({ googleId });
 	}
 
-	async linkGoogleId(userId: string, googleId: string) {
-		return User.findByIdAndUpdate(
-			new Types.ObjectId(userId),
-			{ googleId },
-			{ new: true }
-		);
-	}
-
-	async updateFuelPrices(
-		userId: string,
-		prices: { corriente: number; extra: number }
-	): Promise<IUser | null> {
-		return User.findByIdAndUpdate(
-			userId,
-			{ fuelPrices: prices },
-			{ new: true }
-		);
-	}
+        async linkGoogleId(userId: string, googleId: string) {
+                return User.findByIdAndUpdate(
+                        new Types.ObjectId(userId),
+                        { googleId },
+                        { new: true }
+                );
+        }
 }

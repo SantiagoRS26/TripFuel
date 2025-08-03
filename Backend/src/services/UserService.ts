@@ -38,13 +38,12 @@ export class UserService {
                 return { user, token };
         }
 
-	async me(userId: string) {
-		const user = await this.repo.findById(userId);
-		if (!user) throw new Error("Usuario no encontrado");
-		return {
-			id: user.id,
-			email: user.email,
-			fuelPrices: user.fuelPrices,
+        async me(userId: string) {
+                const user = await this.repo.findById(userId);
+                if (!user) throw new Error("Usuario no encontrado");
+                return {
+                        id: user.id,
+                        email: user.email,
                         createdAt: user.createdAt,
                         updatedAt: user.updatedAt,
                         role: user.role,
@@ -73,23 +72,6 @@ export class UserService {
                 });
                 await this.vehicleSvc.ensureDefaultVehicle(created.id);
                 return created;
-        }
-
-	async updateFuelPrices(
-		userId: string,
-		prices: { corriente?: number; extra?: number }
-	) {
-		const updated = await this.repo.updateFuelPrices(userId, {
-			corriente: prices.corriente ?? 0,
-			extra: prices.extra ?? 0,
-		});
-		if (!updated) throw new Error("Usuario no encontrado");
-		return {
-			id: updated.id,
-			email: updated.email,
-                        fuelPrices: updated.fuelPrices,
-                        role: updated.role,
-                };
         }
 
         private signToken(userId: string, role: UserRole) {

@@ -5,6 +5,7 @@ import cors from "cors";
 import tripRoutes from "./routes/trip.routes";
 import authRoutes from "./routes/auth.routes";
 import vehicleRoutes from "./routes/vehicle.routes";
+import fuelRoutes from "./routes/fuel.routes";
 import { errorHandler } from "./middleware/errorHandler";
 
 export const createApp = () => {
@@ -26,6 +27,7 @@ export const createApp = () => {
 	app.use("/api/auth", authRoutes);
         app.use("/api/trips", tripRoutes);
         app.use("/api/vehicles", vehicleRoutes);
+        app.use("/api/fuel-prices", fuelRoutes);
 
 	app.use(errorHandler);
 
