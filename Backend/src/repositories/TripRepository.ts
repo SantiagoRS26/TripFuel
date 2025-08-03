@@ -28,6 +28,14 @@ export class TripRepository {
                 return count > 0;
         }
 
+        async userHasTripsWithoutVehicle(userId: string): Promise<boolean> {
+                const count = await Trip.countDocuments({
+                        userId: new Types.ObjectId(userId),
+                        $or: [{ vehicleId: { $exists: false } }, { vehicleId: null }],
+                });
+                return count > 0;
+        }
+
         async assignVehicleToOldTrips(userId: string, vehicleId: string): Promise<void> {
                 await Trip.updateMany(
                         {
