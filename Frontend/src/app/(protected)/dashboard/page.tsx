@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 export default function DashboardPage() {
         const { vehicles, loading: vehLoading } = useVehicles();
         const [vehicleId, setVehicleId] = useState<string>("");
-        const { data, loading, error, deleteTrip } = useTrips(vehicleId);
+        const { trips, summary, loading, error, deleteTrip } = useTrips(vehicleId);
 
         React.useEffect(() => {
                 if (!vehicleId && vehicles.length > 0) {
@@ -72,19 +72,19 @@ export default function DashboardPage() {
 				{[
 					{
 						label: "Km Promedio",
-						value: data?.summary.averageKilometers.toFixed(2),
+                                                value: summary?.averageKilometers.toFixed(2),
 					},
 					{
 						label: "Galones Prom.",
-						value: data?.summary.averageGallons.toFixed(2),
+                                                value: summary?.averageGallons.toFixed(2),
 					},
 					{
 						label: "Km/Galón",
-						value: data?.summary.averageKmPerGallon.toFixed(2),
+                                                value: summary?.averageKmPerGallon.toFixed(2),
 					},
 					{
 						label: "Km/Litro",
-						value: data?.summary.averageKmPerLiter.toFixed(2),
+                                                value: summary?.averageKmPerLiter.toFixed(2),
 					},
 				].map((stat, idx) => (
 					<motion.div
@@ -127,7 +127,7 @@ export default function DashboardPage() {
 							</tr>
 						</thead>
 						<tbody className="bg-white divide-y divide-gray-200">
-							{data?.trips.map((trip) => (
+                                                        {trips.map((trip) => (
 								<motion.tr
 									key={trip._id}
 									whileHover={{ scale: 1.02 }}

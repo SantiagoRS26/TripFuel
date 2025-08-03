@@ -20,6 +20,7 @@ export default function NavBar() {
 
         const links = [
                 { href: "/dashboard", label: "Dashboard" },
+                { href: "/analytics", label: "Estadísticas" },
                 { href: "/trips/new", label: "Nuevo Viaje" },
                 { href: "/vehicles", label: "Vehículos" },
                 { href: "/calculator", label: "Calculadora" },
