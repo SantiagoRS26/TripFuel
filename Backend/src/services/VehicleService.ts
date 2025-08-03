@@ -8,14 +8,17 @@ export class VehicleService {
 
     async ensureDefaultVehicle(userId: string): Promise<IVehicle | null> {
         let vehicle = await this.repo.findDefault(userId);
-        if (!vehicle) {
-            const hasTrips = await this.tripRepo.userHasTrips(userId);
-            if (!hasTrips) {
-                return null;
-            }
-            vehicle = await this.repo.createDefault(userId);
-            await this.tripRepo.assignVehicleToOldTrips(userId, vehicle.id);
+        if (vehicle) {
+            return vehicle;
         }
+
+        const needsDefault = await this.tripRepo.userHasTripsWithoutVehicle(userId);
+        if (!needsDefault) {
+            return null;
+        }
+
+        vehicle = await this.repo.createDefault(userId);
+        await this.tripRepo.assignVehicleToOldTrips(userId, vehicle.id);
         return vehicle;
     }
 
