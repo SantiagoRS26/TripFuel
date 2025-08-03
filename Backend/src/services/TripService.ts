@@ -1,6 +1,6 @@
 import { TripRepository } from "../repositories/TripRepository";
-import { UserRepository } from "../repositories/UserRepository";
 import { VehicleService } from "./VehicleService";
+import { FuelPriceService } from "./FuelPriceService";
 import { ITrip } from "../models/Trip";
 import {
 	average,
@@ -12,8 +12,8 @@ import {
 
 export class TripService {
         private tripRepo = new TripRepository();
-        private userRepo = new UserRepository();
         private vehicleSvc = new VehicleService();
+        private fuelPriceSvc = new FuelPriceService();
 
         async create(userId: string, vehicleId: string, km: number, gal: number): Promise<ITrip> {
                 await this.vehicleSvc.ensureDefaultVehicle(userId);
@@ -52,25 +52,24 @@ export class TripService {
 
         async calculate(userId: string, vehicleId: string, km: number) {
                 const { summary } = await this.listWithSummary(userId, vehicleId);
-		const user = await this.userRepo.findById(userId);
-		if (!user) throw new Error("Usuario no encontrado");
+                const prices = await this.fuelPriceSvc.getPrices();
 
-		const galEstimated = km * summary.slopeGalPerKm;
+                const galEstimated = km * summary.slopeGalPerKm;
 
-		const lEstimated = gallonsToLiters(galEstimated);
-		const costCorriente = galEstimated * user.fuelPrices.corriente;
-		const costExtra = galEstimated * user.fuelPrices.extra;
+                const lEstimated = gallonsToLiters(galEstimated);
+                const costCorriente = galEstimated * prices.corriente;
+                const costExtra = galEstimated * prices.extra;
 
-		return {
-			kilometers: km,
-			gallons: galEstimated,
-			liters: lEstimated,
-			cost: {
-				corriente: costCorriente,
-				extra: costExtra,
-			},
-		};
-	}
+                return {
+                        kilometers: km,
+                        gallons: galEstimated,
+                        liters: lEstimated,
+                        cost: {
+                                corriente: costCorriente,
+                                extra: costExtra,
+                        },
+                };
+        }
 
 	async deleteTrip(userId: string, tripId: string): Promise<void> {
 		await this.tripRepo.deleteById(userId, tripId);

@@ -22,10 +22,10 @@ export default function CalculatorPage() {
   const [vehicleId, setVehicleId] = useState<string>("");
   const [km, setKm] = useState<string>("");
   const { data, loading, error, calculate } = useCalculate(vehicleId);
-  const { user } = useAuth();
+  const { fuelPrices } = useAuth();
 
-  const corrientePrice = user?.fuelPrices.corriente ?? 0;
-  const extraPrice = user?.fuelPrices.extra ?? 0;
+  const corrientePrice = fuelPrices?.corriente ?? 0;
+  const extraPrice = fuelPrices?.extra ?? 0;
   const noPrices = corrientePrice <= 0 && extraPrice <= 0;
 
   React.useEffect(() => {
