@@ -23,6 +23,11 @@ export class TripRepository {
                 }).sort({ createdAt: -1 });
         }
 
+        async userHasTrips(userId: string): Promise<boolean> {
+                const count = await Trip.countDocuments({ userId: new Types.ObjectId(userId) });
+                return count > 0;
+        }
+
         async assignVehicleToOldTrips(userId: string, vehicleId: string): Promise<void> {
                 await Trip.updateMany(
                         {

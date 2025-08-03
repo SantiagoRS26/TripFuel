@@ -17,12 +17,15 @@ export class TripService {
 
         async create(userId: string, vehicleId: string, km: number, gal: number): Promise<ITrip> {
                 await this.vehicleSvc.ensureDefaultVehicle(userId);
+                const vehicle = await this.vehicleSvc.findById(userId, vehicleId);
+                if (!vehicle) {
+                        throw new Error("Debes crear un vehículo antes de registrar el consumo");
+                }
                 return this.tripRepo.create({ userId, vehicleId, kilometers: km, gallons: gal });
         }
 
         async listWithSummary(userId: string, vehicleId: string) {
-                const defaultVeh = await this.vehicleSvc.ensureDefaultVehicle(userId);
-                await this.tripRepo.assignVehicleToOldTrips(userId, defaultVeh.id);
+                await this.vehicleSvc.ensureDefaultVehicle(userId);
                 const trips = await this.tripRepo.findByVehicle(userId, vehicleId);
 
 		const kmsArr = trips.map((t) => t.kilometers);
