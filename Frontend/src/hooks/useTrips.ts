@@ -2,11 +2,12 @@
 
 import useSWR from "swr";
 import api from "@/lib/api";
-import { ITrip, TripSummaryResponse } from "@/types";
+import { ITrip, TripSummaryResponse, FuelPrices } from "@/types";
 
 interface TripsData {
         trips: ITrip[];
         summary: TripSummaryResponse;
+        prices: FuelPrices;
 }
 
 export function useTrips(vehicleId: string) {
@@ -23,6 +24,7 @@ export function useTrips(vehicleId: string) {
         return {
                 trips: data?.trips ?? [],
                 summary: data?.summary ?? null,
+                prices: data?.prices ?? null,
                 loading: isLoading,
                 error: error instanceof Error ? error.message : null,
                 deleteTrip,
