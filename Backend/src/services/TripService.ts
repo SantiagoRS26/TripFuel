@@ -26,33 +26,36 @@ export class TripService {
 
         async listWithSummary(userId: string, vehicleId: string) {
                 await this.vehicleSvc.ensureDefaultVehicle(userId);
-                const trips = await this.tripRepo.findByVehicle(userId, vehicleId);
+                const [trips, prices] = await Promise.all([
+                        this.tripRepo.findByVehicle(userId, vehicleId),
+                        this.fuelPriceSvc.getPrices(),
+                ]);
 
-		const kmsArr = trips.map((t) => t.kilometers);
-		const galArr = trips.map((t) => t.gallons);
+                const kmsArr = trips.map((t) => t.kilometers);
+                const galArr = trips.map((t) => t.gallons);
 
-		const slope = slopeGalPerKm(kmsArr, galArr);
+                const slope = slopeGalPerKm(kmsArr, galArr);
 
-		const avgKm = average(kmsArr);
-		const avgGal = average(galArr);
-		const avgKmPerGal = kmPerGallon(avgKm, avgGal);
-		const avgKmPerL = kmPerLiter(avgKm, avgGal);
+                const avgKm = average(kmsArr);
+                const avgGal = average(galArr);
+                const avgKmPerGal = kmPerGallon(avgKm, avgGal);
+                const avgKmPerL = kmPerLiter(avgKm, avgGal);
 
-		return {
-			trips,
-			summary: {
-				averageKilometers: avgKm,
-				averageGallons: avgGal,
-				averageKmPerGallon: avgKmPerGal,
-				averageKmPerLiter: avgKmPerL,
-				slopeGalPerKm: slope,
-			},
-		};
-	}
+                return {
+                        trips,
+                        summary: {
+                                averageKilometers: avgKm,
+                                averageGallons: avgGal,
+                                averageKmPerGallon: avgKmPerGal,
+                                averageKmPerLiter: avgKmPerL,
+                                slopeGalPerKm: slope,
+                        },
+                        prices,
+                };
+        }
 
         async calculate(userId: string, vehicleId: string, km: number) {
-                const { summary } = await this.listWithSummary(userId, vehicleId);
-                const prices = await this.fuelPriceSvc.getPrices();
+                const { summary, prices } = await this.listWithSummary(userId, vehicleId);
 
                 const galEstimated = km * summary.slopeGalPerKm;
 
