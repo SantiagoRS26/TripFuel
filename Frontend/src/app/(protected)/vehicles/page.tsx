@@ -10,6 +10,8 @@ import { Table, TableHead, TableHeader, TableBody, TableRow, TableCell } from "@
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
+import Spinner from "@/components/ui/spinner";
+import LoadingState from "@/components/LoadingState";
 
 export default function VehiclesPage() {
     const { vehicles, loading, error, createVehicle, updateVehicle, deleteVehicle } = useVehicle();
@@ -41,7 +43,7 @@ export default function VehiclesPage() {
         setLicensePlate(vPlate);
     };
 
-    if (loading) return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+    if (loading) return <LoadingState message="Obteniendo tus vehículos…" />;
     if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
 
     return (
@@ -95,7 +97,11 @@ export default function VehiclesPage() {
                                 disabled={saving}
                                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition"
                             >
-                                {saving ? "Guardando..." : editId ? "Actualizar" : "Agregar"}
+                                {saving ? (
+                                  <>
+                                    <Spinner size={16} /> Guardando…
+                                  </>
+                                ) : editId ? "Actualizar" : "Agregar"}
                             </Button>
                             {editId && (
                                 <Button

@@ -8,6 +8,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/spinner";
 
 export default function SignupPage() {
 	const { signup } = useAuth();
@@ -85,7 +86,13 @@ export default function SignupPage() {
 								type="submit"
 								disabled={loading}
 								className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition">
-								{loading ? "Cargando..." : "Registrarse"}
+								{loading ? (
+									<>
+										<Spinner size={16} /> Registrando…
+									</>
+								) : (
+									"Registrarse"
+								)}
 							</Button>
 						</form>
 

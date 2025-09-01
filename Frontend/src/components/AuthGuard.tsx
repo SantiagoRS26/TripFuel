@@ -4,6 +4,7 @@ import React, { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion } from "framer-motion";
+import LoadingState from "@/components/LoadingState";
 
 interface AuthGuardProps {
   children: ReactNode;
@@ -19,20 +20,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }
   }, [loading, user, router]);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-sky-50">
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <p className="text-lg text-indigo-600">Cargando sesión...</p>
-        </motion.div>
-      </div>
-    );
-  }
+  if (loading) return <LoadingState message="Verificando tu sesión…" />;
 
   if (!user) {
     return null;

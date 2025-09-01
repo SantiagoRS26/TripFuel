@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { useVehicle } from "@/contexts/VehicleContext";
+import LoadingState from "@/components/LoadingState";
+import Spinner from "@/components/ui/spinner";
 
 export default function NewTripPage() {
 	const router = useRouter();
@@ -36,8 +38,7 @@ export default function NewTripPage() {
 	const [initialKm, setInitialKm] = useState<string>("");
         const [finalKm, setFinalKm] = useState<string>("");
 
-        if (vehLoading)
-                return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+        if (vehLoading) return <LoadingState message="Cargando tus vehículos…" />;
         if (!selectedVehicleId && vehicles.length === 0)
                 return <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>;
 
@@ -236,7 +237,13 @@ export default function NewTripPage() {
 										type="submit"
 										disabled={loading}
 										className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition">
-										{loading ? "Guardando..." : "Guardar"}
+                            {loading ? (
+                              <>
+                                <Spinner size={16} /> Guardando…
+                              </>
+                            ) : (
+                              "Guardar"
+                            )}
 									</Button>
 								</form>
 							</TabsContent>
@@ -303,7 +310,13 @@ export default function NewTripPage() {
 										type="submit"
 										disabled={loading}
 										className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition">
-										{loading ? "Guardando..." : "Guardar"}
+                            {loading ? (
+                              <>
+                                <Spinner size={16} /> Guardando…
+                              </>
+                            ) : (
+                              "Guardar"
+                            )}
 									</Button>
 								</form>
 							</TabsContent>

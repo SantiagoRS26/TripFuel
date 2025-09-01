@@ -8,6 +8,7 @@ import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import Spinner from "@/components/ui/spinner";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -79,7 +80,13 @@ export default function LoginPage() {
                 disabled={loading}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition"
               >
-                {loading ? "Cargando..." : "Acceder"}
+                {loading ? (
+                  <>
+                    <Spinner size={16} /> Accediendo…
+                  </>
+                ) : (
+                  "Acceder"
+                )}
               </Button>
             </form>
 

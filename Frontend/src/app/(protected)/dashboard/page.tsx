@@ -7,6 +7,7 @@ import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatCOP } from "@/lib/format";
+import LoadingState from "@/components/LoadingState";
 
 export default function DashboardPage() {
         const {
@@ -20,8 +21,7 @@ export default function DashboardPage() {
         const corrientePrice = fuelPrices?.corriente ?? 0;
         const extraPrice = fuelPrices?.extra ?? 0;
 
-        if (vehLoading || loading)
-                return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+        if (vehLoading || loading) return <LoadingState message="Preparando tu tablero…" />;
         if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
         if (!selectedVehicleId && vehicles.length === 0)
                 return (

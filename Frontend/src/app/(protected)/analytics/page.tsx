@@ -4,6 +4,7 @@ import React, { useMemo } from "react";
 import { useTrips } from "@/hooks/useTrips";
 import { useVehicle } from "@/contexts/VehicleContext";
 import { LineChart, ScatterChart } from "@/components/Charts";
+import LoadingState from "@/components/LoadingState";
 
 export default function AnalyticsPage() {
         const {
@@ -40,8 +41,7 @@ export default function AnalyticsPage() {
 	}, [trips, slopeGalPerKm]);
 
 	// Returns condicionales después de todos los hooks
-        if (vehLoading || loading)
-                return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+        if (vehLoading || loading) return <LoadingState message="Cargando analíticas…" />;
         if (!selectedVehicleId && vehicles.length === 0)
                 return (
                         <p className="p-4 text-center text-gray-500">

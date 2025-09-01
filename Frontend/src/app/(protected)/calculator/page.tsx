@@ -11,6 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
 import { formatCOP } from "@/lib/format";
+import LoadingState from "@/components/LoadingState";
+import Spinner from "@/components/ui/spinner";
 
 export default function CalculatorPage() {
   const {
@@ -65,8 +67,7 @@ export default function CalculatorPage() {
     );
   }
 
-  if (vehLoading)
-    return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+  if (vehLoading) return <LoadingState message="Cargando calculadora…" />;
   if (!selectedVehicleId && vehicles.length === 0)
     return (
       <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>
@@ -137,7 +138,13 @@ export default function CalculatorPage() {
                 disabled={loading}
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-full py-3 font-medium transition"
               >
-                {loading ? "Calculando..." : "Calcular"}
+                {loading ? (
+                  <>
+                    <Spinner size={16} /> Calculando…
+                  </>
+                ) : (
+                  "Calcular"
+                )}
               </Button>
             </form>
 

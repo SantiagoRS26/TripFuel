@@ -3,6 +3,7 @@
 import { ReactNode, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import LoadingState from "@/components/LoadingState";
 
 interface RoleGuardProps {
     requiredRole: "admin" | "user";
@@ -20,9 +21,7 @@ export default function RoleGuard({ requiredRole, children, fallback }: RoleGuar
         }
     }, [loading, user, router, requiredRole]);
 
-    if (loading) {
-        return null;
-    }
+    if (loading) return <LoadingState message="Comprobando permisos…" />
 
     if (!user || user.role !== requiredRole) {
         return <>{fallback ?? null}</>;
