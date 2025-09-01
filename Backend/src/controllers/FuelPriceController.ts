@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
 import { FuelPriceService } from "../services/FuelPriceService";
+import { config } from "../config";
 
-const service = new FuelPriceService();
+const service = new FuelPriceService(config.FUEL_PRICE_TTL_MS);
 
 export class FuelPriceController {
         static async getPrices(_req: Request, res: Response) {
