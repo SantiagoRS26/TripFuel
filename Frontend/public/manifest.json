@@ -1,0 +1,15 @@
+{
+  "name": "TripFuel",
+  "short_name": "TripFuel",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "icons": [
+    {
+      "src": "/TripFuel.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

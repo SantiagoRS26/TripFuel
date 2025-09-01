@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import api from "@/lib/api";
+import { queueTrip } from "@/lib/offlineTripQueue";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -121,13 +122,18 @@ export default function NewTripPage() {
 
                 setLoading(true);
                 try {
-                        await api.post("/trips", { vehicleId: selectedVehicleId, kilometers: kmNumber, gallons: galNumber });
+                        if (!navigator.onLine) {
+                                queueTrip({ vehicleId: selectedVehicleId, kilometers: kmNumber!, gallons: galNumber });
+                                alert("Sin conexión: el viaje se guardará y se sincronizará automáticamente.");
+                        } else {
+                                await api.post("/trips", { vehicleId: selectedVehicleId, kilometers: kmNumber, gallons: galNumber });
+                        }
                         router.push("/dashboard");
-		} catch (err: any) {
-			setError(err.response?.data?.message || "Error al guardar el viaje");
-		} finally {
-			setLoading(false);
-		}
+                } catch (err: any) {
+                        setError(err.response?.data?.message || "Error al guardar el viaje");
+                } finally {
+                        setLoading(false);
+                }
 	};
 
 	/** ----------------------------------
