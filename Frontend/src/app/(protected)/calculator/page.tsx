@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useCalculate } from "@/hooks/useCalculate";
-import { useVehicles } from "@/hooks/useVehicles";
+import { useVehicle } from "@/contexts/VehicleContext";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -13,21 +13,19 @@ import { useAuth } from "@/contexts/AuthContext";
 import { formatCOP } from "@/lib/format";
 
 export default function CalculatorPage() {
-  const { vehicles, loading: vehLoading } = useVehicles();
-  const [vehicleId, setVehicleId] = useState<string>("");
+  const {
+    vehicles,
+    loading: vehLoading,
+    selectedVehicleId,
+    setSelectedVehicleId,
+  } = useVehicle();
   const [km, setKm] = useState<string>("");
-  const { data, loading, error, calculate } = useCalculate(vehicleId);
+  const { data, loading, error, calculate } = useCalculate(selectedVehicleId);
   const { fuelPrices } = useAuth();
 
   const corrientePrice = fuelPrices?.corriente ?? 0;
   const extraPrice = fuelPrices?.extra ?? 0;
   const noPrices = corrientePrice <= 0 && extraPrice <= 0;
-
-  React.useEffect(() => {
-    if (!vehicleId && vehicles.length > 0) {
-      setVehicleId(vehicles[0]._id);
-    }
-  }, [vehicles, vehicleId]);
 
   const handleKmChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -69,7 +67,7 @@ export default function CalculatorPage() {
 
   if (vehLoading)
     return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
-  if (!vehicleId && vehicles.length === 0)
+  if (!selectedVehicleId && vehicles.length === 0)
     return (
       <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>
     );
@@ -109,8 +107,8 @@ export default function CalculatorPage() {
               <div>
                 <Label className="text-gray-600">Vehículo</Label>
                 <select
-                  value={vehicleId}
-                  onChange={(e) => setVehicleId(e.target.value)}
+                  value={selectedVehicleId}
+                  onChange={(e) => setSelectedVehicleId(e.target.value)}
                   className="mt-1 w-full border rounded p-2"
                 >
                   {vehicles.map((v) => (

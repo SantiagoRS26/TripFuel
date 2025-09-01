@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useVehicles } from "@/hooks/useVehicles";
+import { useVehicle } from "@/contexts/VehicleContext";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 export default function VehiclesPage() {
-    const { vehicles, loading, error, createVehicle, updateVehicle, deleteVehicle } = useVehicles();
+    const { vehicles, loading, error, createVehicle, updateVehicle, deleteVehicle } = useVehicle();
     const [name, setName] = useState("");
     const [licensePlate, setLicensePlate] = useState("");
     const [editId, setEditId] = useState<string | null>(null);

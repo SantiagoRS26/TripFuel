@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "../contexts/AuthContext";
+import { VehicleProvider } from "../contexts/VehicleContext";
 import "./globals.css";
 import NavBar from "@/components/NavBar";
 
@@ -17,10 +18,12 @@ export default function RootLayout({
 	return (
 		<html lang="es">
 			<body>
-				<AuthProvider>
-					<NavBar />
-					<main>{children}</main>
-				</AuthProvider>
+                                <AuthProvider>
+                                        <VehicleProvider>
+                                                <NavBar />
+                                                <main>{children}</main>
+                                        </VehicleProvider>
+                                </AuthProvider>
 			</body>
 		</html>
 	);

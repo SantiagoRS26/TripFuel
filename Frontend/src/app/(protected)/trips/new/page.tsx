@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { useVehicles } from "@/hooks/useVehicles";
+import { useVehicle } from "@/contexts/VehicleContext";
 
 export default function NewTripPage() {
 	const router = useRouter();
@@ -18,8 +18,12 @@ export default function NewTripPage() {
 	/** ----------------------------------
 	 *  Shared state & helpers
 	 * ---------------------------------*/
-        const { vehicles, loading: vehLoading } = useVehicles();
-        const [vehicleId, setVehicleId] = useState<string>("");
+        const {
+                vehicles,
+                loading: vehLoading,
+                selectedVehicleId,
+                setSelectedVehicleId,
+        } = useVehicle();
         const [selectedTab, setSelectedTab] = useState<string>("direct");
 	const [gallons, setGallons] = useState<string>("");
 	const [loading, setLoading] = useState(false);
@@ -32,15 +36,9 @@ export default function NewTripPage() {
 	const [initialKm, setInitialKm] = useState<string>("");
         const [finalKm, setFinalKm] = useState<string>("");
 
-        React.useEffect(() => {
-                if (!vehicleId && vehicles.length > 0) {
-                        setVehicleId(vehicles[0]._id);
-                }
-        }, [vehicles, vehicleId]);
-
         if (vehLoading)
                 return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
-        if (!vehicleId && vehicles.length === 0)
+        if (!selectedVehicleId && vehicles.length === 0)
                 return <p className="p-4 text-center text-gray-500">Debes crear un vehículo antes de continuar.</p>;
 
 	const isValidNumber = (value: string) => /^[0-9]*[.,]?[0-9]*$/.test(value);
@@ -78,7 +76,7 @@ export default function NewTripPage() {
                 e.preventDefault();
                 setError(null);
 
-                if (!vehicleId) {
+                if (!selectedVehicleId) {
                         setError("Debes crear un vehículo antes");
                         return;
                 }
@@ -122,7 +120,7 @@ export default function NewTripPage() {
 
                 setLoading(true);
                 try {
-                        await api.post("/trips", { vehicleId, kilometers: kmNumber, gallons: galNumber });
+                        await api.post("/trips", { vehicleId: selectedVehicleId, kilometers: kmNumber, gallons: galNumber });
                         router.push("/dashboard");
 		} catch (err: any) {
 			setError(err.response?.data?.message || "Error al guardar el viaje");
@@ -166,8 +164,8 @@ export default function NewTripPage() {
                                                 <div className="mb-4">
                                                         <Label className="text-gray-600">Vehículo</Label>
                                                         <select
-                                                                value={vehicleId}
-                                                                onChange={(e) => setVehicleId(e.target.value)}
+                                                                value={selectedVehicleId}
+                                                                onChange={(e) => setSelectedVehicleId(e.target.value)}
                                                                 className="mt-1 w-full border rounded p-2">
                                                                 {vehicles.map((v) => (
                                                                         <option key={v._id} value={v._id}>
