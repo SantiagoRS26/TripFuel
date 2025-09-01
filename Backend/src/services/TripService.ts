@@ -2,6 +2,7 @@ import { TripRepository } from "../repositories/TripRepository";
 import { VehicleService } from "./VehicleService";
 import { FuelPriceService } from "./FuelPriceService";
 import { ITrip } from "../models/Trip";
+import { config } from "../config";
 import {
 	average,
 	gallonsToLiters,
@@ -13,7 +14,7 @@ import {
 export class TripService {
         private tripRepo = new TripRepository();
         private vehicleSvc = new VehicleService();
-        private fuelPriceSvc = new FuelPriceService();
+        private fuelPriceSvc = new FuelPriceService(config.FUEL_PRICE_TTL_MS);
 
         async create(userId: string, vehicleId: string, km: number, gal: number): Promise<ITrip> {
                 await this.vehicleSvc.ensureDefaultVehicle(userId);
