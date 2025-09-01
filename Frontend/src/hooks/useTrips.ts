@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import useSWR from "swr";
 import api from "@/lib/api";
 import { ITrip, TripSummaryResponse } from "@/types";
 
@@ -10,37 +10,21 @@ interface TripsData {
 }
 
 export function useTrips(vehicleId: string) {
-        const [trips, setTrips] = useState<ITrip[]>([]);
-        const [summary, setSummary] = useState<TripSummaryResponse | null>(null);
-        const [loading, setLoading] = useState<boolean>(true);
-        const [error, setError] = useState<string | null>(null);
-
-        const fetchData = useCallback(() => {
-                if (!vehicleId) {
-                        setTrips([]);
-                        setSummary(null);
-                        setLoading(false);
-                        return;
-                }
-                setLoading(true);
-                api
-                        .get<TripsData>(`/trips?vehicleId=${vehicleId}`)
-                        .then((res) => {
-                                setTrips(res.data.trips);
-                                setSummary(res.data.summary);
-                        })
-                        .catch((err) => setError(err.message || "Error al cargar viajes"))
-                        .finally(() => setLoading(false));
-        }, [vehicleId]);
-
-        useEffect(() => {
-                fetchData();
-        }, [fetchData]);
+        const { data, error, isLoading, mutate } = useSWR<TripsData>(
+                vehicleId ? `/trips?vehicleId=${vehicleId}` : null,
+                (url: string) => api.get<TripsData>(url).then((res) => res.data)
+        );
 
         const deleteTrip = async (id: string) => {
                 await api.delete(`/trips/${id}`);
-                fetchData();
+                mutate();
         };
 
-        return { trips, summary, loading, error, deleteTrip };
+        return {
+                trips: data?.trips ?? [],
+                summary: data?.summary ?? null,
+                loading: isLoading,
+                error: error instanceof Error ? error.message : null,
+                deleteTrip,
+        };
 }
