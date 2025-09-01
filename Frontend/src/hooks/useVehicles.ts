@@ -1,35 +1,18 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import useSWR from "swr";
 import api from "@/lib/api";
 import { Vehicle } from "@/types";
 
 export function useVehicles(enabled = true) {
-    const [vehicles, setVehicles] = useState<Vehicle[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
-
-    const fetchVehicles = useCallback(() => {
-        setLoading(true);
-        api
-            .get<{ vehicles: Vehicle[] }>("/vehicles")
-            .then((res) => setVehicles(res.data.vehicles))
-            .catch((err) => setError(err.message || "Error al cargar vehículos"))
-            .finally(() => setLoading(false));
-    }, []);
-
-    useEffect(() => {
-        if (!enabled) {
-            setVehicles([]);
-            setLoading(false);
-            return;
-        }
-        fetchVehicles();
-    }, [fetchVehicles, enabled]);
+    const { data, error, isLoading, mutate } = useSWR<{ vehicles: Vehicle[] }>(
+        enabled ? "/vehicles" : null,
+        (url: string) => api.get<{ vehicles: Vehicle[] }>(url).then((res) => res.data)
+    );
 
     const createVehicle = async (name: string, licensePlate: string) => {
         await api.post("/vehicles", { name, licensePlate });
-        fetchVehicles();
+        mutate();
     };
 
     const updateVehicle = async (
@@ -37,13 +20,20 @@ export function useVehicles(enabled = true) {
         data: { name: string; licensePlate: string }
     ) => {
         await api.put(`/vehicles/${id}`, data);
-        fetchVehicles();
+        mutate();
     };
 
     const deleteVehicle = async (id: string) => {
         await api.delete(`/vehicles/${id}`);
-        fetchVehicles();
+        mutate();
     };
 
-    return { vehicles, loading, error, createVehicle, updateVehicle, deleteVehicle };
+    return {
+        vehicles: data?.vehicles ?? [],
+        loading: isLoading,
+        error: error instanceof Error ? error.message : null,
+        createVehicle,
+        updateVehicle,
+        deleteVehicle,
+    };
 }
