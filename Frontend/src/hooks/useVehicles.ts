@@ -4,7 +4,7 @@ import { useState, useCallback, useEffect } from "react";
 import api from "@/lib/api";
 import { Vehicle } from "@/types";
 
-export function useVehicles() {
+export function useVehicles(enabled = true) {
     const [vehicles, setVehicles] = useState<Vehicle[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
@@ -19,8 +19,13 @@ export function useVehicles() {
     }, []);
 
     useEffect(() => {
+        if (!enabled) {
+            setVehicles([]);
+            setLoading(false);
+            return;
+        }
         fetchVehicles();
-    }, [fetchVehicles]);
+    }, [fetchVehicles, enabled]);
 
     const createVehicle = async (name: string, licensePlate: string) => {
         await api.post("/vehicles", { name, licensePlate });

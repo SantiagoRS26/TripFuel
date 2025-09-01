@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
 import { useTrips } from "@/hooks/useTrips";
-import { useVehicles } from "@/hooks/useVehicles";
+import { useVehicle } from "@/contexts/VehicleContext";
 import Link from "next/link";
 import { Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
@@ -10,23 +9,21 @@ import { useAuth } from "@/contexts/AuthContext";
 import { formatCOP } from "@/lib/format";
 
 export default function DashboardPage() {
-        const { vehicles, loading: vehLoading } = useVehicles();
-        const [vehicleId, setVehicleId] = useState<string>("");
-        const { trips, summary, loading, error, deleteTrip } = useTrips(vehicleId);
+        const {
+                vehicles,
+                loading: vehLoading,
+                selectedVehicleId,
+                setSelectedVehicleId,
+        } = useVehicle();
+        const { trips, summary, loading, error, deleteTrip } = useTrips(selectedVehicleId);
         const { fuelPrices } = useAuth();
         const corrientePrice = fuelPrices?.corriente ?? 0;
         const extraPrice = fuelPrices?.extra ?? 0;
 
-        React.useEffect(() => {
-                if (!vehicleId && vehicles.length > 0) {
-                        setVehicleId(vehicles[0]._id);
-                }
-        }, [vehicles, vehicleId]);
-
         if (vehLoading || loading)
                 return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
         if (error) return <p className="p-4 text-center text-red-500">{error}</p>;
-        if (!vehicleId && vehicles.length === 0)
+        if (!selectedVehicleId && vehicles.length === 0)
                 return (
                         <p className="p-4 text-center text-gray-500">
                                 Debes crear un vehículo antes de continuar.
@@ -50,8 +47,8 @@ export default function DashboardPage() {
 				</p>
                                 <div className="flex flex-col items-center gap-4">
                                         <select
-                                                value={vehicleId}
-                                                onChange={(e) => setVehicleId(e.target.value)}
+                                                value={selectedVehicleId}
+                                                onChange={(e) => setSelectedVehicleId(e.target.value)}
                                                 className="border rounded p-2">
                                                 {vehicles.map((v) => (
                                                         <option key={v._id} value={v._id}>

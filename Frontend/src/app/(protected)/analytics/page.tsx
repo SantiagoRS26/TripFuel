@@ -1,20 +1,18 @@
 "use client";
 
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { useTrips } from "@/hooks/useTrips";
-import { useVehicles } from "@/hooks/useVehicles";
+import { useVehicle } from "@/contexts/VehicleContext";
 import { LineChart, ScatterChart } from "@/components/Charts";
 
 export default function AnalyticsPage() {
-	const { vehicles, loading: vehLoading } = useVehicles();
-	const [vehicleId, setVehicleId] = useState<string>("");
-	const { trips, summary, loading } = useTrips(vehicleId);
-
-	useEffect(() => {
-		if (!vehicleId && vehicles.length > 0) {
-			setVehicleId(vehicles[0]._id);
-		}
-	}, [vehicles, vehicleId]);
+        const {
+                vehicles,
+                loading: vehLoading,
+                selectedVehicleId,
+                setSelectedVehicleId,
+        } = useVehicle();
+        const { trips, summary, loading } = useTrips(selectedVehicleId);
 
 	// Todos los hooks deben estar antes de cualquier return condicional
 	const slopeGalPerKm = useMemo(() => {
@@ -42,14 +40,14 @@ export default function AnalyticsPage() {
 	}, [trips, slopeGalPerKm]);
 
 	// Returns condicionales después de todos los hooks
-	if (vehLoading || loading)
-		return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
-	if (!vehicleId && vehicles.length === 0)
-		return (
-			<p className="p-4 text-center text-gray-500">
-				Debes crear un vehículo antes de continuar.
-			</p>
-		);
+        if (vehLoading || loading)
+                return <p className="p-4 text-center text-gray-500">Cargando datos...</p>;
+        if (!selectedVehicleId && vehicles.length === 0)
+                return (
+                        <p className="p-4 text-center text-gray-500">
+                                Debes crear un vehículo antes de continuar.
+                        </p>
+                );
 
 	const scatterPoints = trips.map((t) => ({ x: t.kilometers, y: t.gallons }));
 	const kmPerGallon = trips.map((t) => t.kilometers / t.gallons);
@@ -59,10 +57,10 @@ export default function AnalyticsPage() {
 		<div className="p-4 space-y-8">
 			<h1 className="text-2xl font-bold text-indigo-600">Estadísticas</h1>
 			<div>
-				<select
-					value={vehicleId}
-					onChange={(e) => setVehicleId(e.target.value)}
-					className="border rounded p-2">
+                                <select
+                                        value={selectedVehicleId}
+                                        onChange={(e) => setSelectedVehicleId(e.target.value)}
+                                        className="border rounded p-2">
 					{vehicles.map((v) => (
 						<option
 							key={v._id}
