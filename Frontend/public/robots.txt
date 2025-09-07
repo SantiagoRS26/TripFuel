@@ -1,6 +1,12 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /dashboard
+Disallow: /settings
+Disallow: /auth
+Disallow: /login
+Disallow: /signup
+Disallow: /trips/new
 
 # Host
 Host: https://tripfuel.vercel.app
