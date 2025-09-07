@@ -4,11 +4,12 @@ import React, { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
+
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -40,9 +41,7 @@ export default function LoginPage() {
       >
         <Card className="rounded-2xl shadow-lg overflow-hidden">
           <CardHeader className="bg-white text-center py-6">
-            <CardTitle className="text-3xl font-extrabold text-indigo-600">
-              Iniciar Sesión
-            </CardTitle>
+            <h1 className="text-3xl font-extrabold text-indigo-600">Iniciar Sesión</h1>
           </CardHeader>
           <CardContent className="bg-white p-6 space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">

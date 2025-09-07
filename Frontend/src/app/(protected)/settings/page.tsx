@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import Spinner from "@/components/ui/spinner";
 import Link from "next/link";
 
+
 export default function SettingsPage() {
   const { user, fuelPrices, updateFuelPrices } = useAuth();
   const isAdmin = user?.role === "admin";

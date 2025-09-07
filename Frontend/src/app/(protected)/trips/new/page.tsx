@@ -15,6 +15,7 @@ import { useVehicle } from "@/contexts/VehicleContext";
 import LoadingState from "@/components/LoadingState";
 import Spinner from "@/components/ui/spinner";
 
+
 export default function NewTripPage() {
 	const router = useRouter();
 

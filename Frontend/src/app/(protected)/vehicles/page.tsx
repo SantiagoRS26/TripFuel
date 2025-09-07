@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import Spinner from "@/components/ui/spinner";
 import LoadingState from "@/components/LoadingState";
 
+
 export default function VehiclesPage() {
     const { vehicles, loading, error, createVehicle, updateVehicle, deleteVehicle } = useVehicle();
     const [name, setName] = useState("");
