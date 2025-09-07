@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { formatCOP } from "@/lib/format";
 import LoadingState from "@/components/LoadingState";
 
+
 export default function DashboardPage() {
         const {
                 vehicles,

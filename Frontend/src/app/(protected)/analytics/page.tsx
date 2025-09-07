@@ -6,6 +6,7 @@ import { useVehicle } from "@/contexts/VehicleContext";
 import { LineChart, ScatterChart } from "@/components/Charts";
 import LoadingState from "@/components/LoadingState";
 
+
 export default function AnalyticsPage() {
         const {
                 vehicles,

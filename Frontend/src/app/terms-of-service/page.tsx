@@ -4,6 +4,7 @@ import React from "react";
 import NavBar from "@/components/NavBar";
 import Link from "next/link";
 
+
 export default function TermsOfService() {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-indigo-50 to-sky-50 font-[var(--font-geist-sans)] text-gray-700">

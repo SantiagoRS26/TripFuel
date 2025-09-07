@@ -14,6 +14,7 @@ import { formatCOP } from "@/lib/format";
 import LoadingState from "@/components/LoadingState";
 import Spinner from "@/components/ui/spinner";
 
+
 export default function CalculatorPage() {
   const {
     vehicles,

@@ -27,9 +27,9 @@ export default function SocialAuthHandler() {
 		})();
 	}, [params, router, socialLogin]);
 
-	return (
-		<div className="flex items-center justify-center h-screen">
-			<p className="text-gray-600 animate-pulse">Procesando autenticación…</p>
-		</div>
-	);
+        return (
+                <div className="flex items-center justify-center h-screen">
+                        <h1 className="text-xl text-gray-600 animate-pulse">Procesando autenticación…</h1>
+                </div>
+        );
 }
