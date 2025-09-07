@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url><loc>https://tripfuel.example.com/login</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/privacity</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/signup</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/terms-of-service</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/calculator</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/dashboard</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/analytics</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/settings</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/trips/new</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/vehicles</loc><lastmod>2025-09-07T22:46:57.939Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
-<url><loc>https://tripfuel.example.com/auth/social</loc><lastmod>2025-09-07T22:46:57.940Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/privacity</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/calculator</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/dashboard</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/settings</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/analytics</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/auth/social</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/vehicles</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/terms-of-service</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/login</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/trips/new</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
+<url><loc>https://tripfuel.vercel.app/signup</loc><lastmod>2025-09-07T22:55:30.794Z</lastmod><changefreq>daily</changefreq><priority>0.7</priority></url>
 </urlset>

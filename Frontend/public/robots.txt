@@ -3,7 +3,7 @@ User-agent: *
 Allow: /
 
 # Host
-Host: https://tripfuel.example.com
+Host: https://tripfuel.vercel.app
 
 # Sitemaps
-Sitemap: https://tripfuel.example.com/sitemap.xml
+Sitemap: https://tripfuel.vercel.app/sitemap.xml
